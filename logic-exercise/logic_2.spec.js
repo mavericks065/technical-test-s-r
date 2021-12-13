@@ -25,5 +25,21 @@ describe("logical exercise 2, when receiving an array of letters", () => {
       expect(result).toBe('c');
       expect(result1).toBe('w');
     });
+    it("should return empty if array is null, undefined or empty", () => {
+      // Given
+      const letters = null;
+      const letters1 = undefined;
+      const letters2 = [];
+
+      // When
+      const result = areLettersOrdered(letters);
+      const result1 = areLettersOrdered(letters1);
+      const result2 = areLettersOrdered(letters2);
+
+      // Then
+      expect(result).toBe('');
+      expect(result1).toBe('');
+      expect(result2).toBe('');
+    });
   });
 });

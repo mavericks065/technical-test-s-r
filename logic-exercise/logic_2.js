@@ -1,4 +1,7 @@
 const areLettersOrdered = (letters) => {
+    if (!letters)
+        return '';
+
     const lettersLength = letters.length;
     for (let index = 0; index < lettersLength - 1; index++) {
         const current = alphabetToInt.get(letters[index]);
