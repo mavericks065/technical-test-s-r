@@ -4,7 +4,7 @@ describe("logical exercise 1", () => {
   describe("when receiving a number the function checkAllDigitsArePresent", () => {
     it("should return false if not all digits are present", () => {
       // Given
-      const longNumber = 109784;
+      const longNumber = 9864523148090;
 
       // When
       const result = checkAllDigitsArePresent(longNumber);
@@ -14,7 +14,7 @@ describe("logical exercise 1", () => {
     });
     it("should return true if all digits are present", () => {
       // Given
-      const longNumber = 1023456789;
+      const longNumber = 98410783562910;
 
       // When
       const result = checkAllDigitsArePresent(longNumber);
