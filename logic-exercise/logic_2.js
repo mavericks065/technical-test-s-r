@@ -6,7 +6,7 @@ const areLettersOrdered = (letters) => {
     for (let index = 0; index < lettersLength - 1; index++) {
         const current = alphabetToInt.get(letters[index]);
         const next = alphabetToInt.get(letters[index + 1]);
-        if (current + 1 != next) {
+        if (current + 1 !== next) {
             return intToAlphabet.get(current + 1)
         }
     }
