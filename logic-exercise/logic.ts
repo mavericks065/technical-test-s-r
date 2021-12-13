@@ -1,4 +1,7 @@
 const checkAllDigitsArePresent = (longNumber: number): boolean => {
+    if (!longNumber)
+        return false;
+
     const number = longNumber.toString();
     const inputtedDigits = [];
     let element: string;

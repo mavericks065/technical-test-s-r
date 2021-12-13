@@ -23,4 +23,22 @@ describe("logical exercise 1", () => {
       expect(result).toBe(true);
     });
   });
+  describe("when not receiving a number the function checkAllDigitsArePresent", () => {
+    it("should return false ", () => {
+      // Given
+      const longNumber = undefined;
+      const longNumber1 = null;
+      const longNumber2 = 0;
+
+      // When
+      const result = checkAllDigitsArePresent(longNumber);
+      const result1 = checkAllDigitsArePresent(longNumber1);
+      const result2 = checkAllDigitsArePresent(longNumber2);
+
+      // Then
+      expect(result).toBe(false);
+      expect(result1).toBe(false);
+      expect(result2).toBe(false);
+    });
+  });
 });
