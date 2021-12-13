@@ -1,8 +1,16 @@
 import logic from "./logic";
 
-describe("test", () => {
-  it("test", () => {
-    var result = logic(0);
-    expect(result).toBe(false);
+describe("logical exercise 1", () => {
+  describe("when receiving a number the function checkAllDigitsArePresent", () => {
+    it("should return false if not all digits are present", () => {
+      // Given
+      const longNumber = 109784;
+
+      // When
+      const result = logic(longNumber);
+
+      // Then
+      expect(result).toBe(false);
+    });
   });
 });
