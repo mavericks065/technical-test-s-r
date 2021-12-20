@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  redis:
+    host: ${REDIS_HOSTNAME}
+    port: ${REDIS_PORT}
+    database: ${REDIS_DATABASE}
+    lettuce:
+      pool:
+        max-active: 50
+        max-idle: 50
+        min-idle: 0

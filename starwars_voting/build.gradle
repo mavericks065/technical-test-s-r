@@ -1,0 +1,176 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+plugins {
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id 'org.springframework.boot' version "${springVersion}"
+    id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.plugin.spring' version "${kotlinVersion}"
+    id "org.jetbrains.kotlin.plugin.jpa" version "${kotlinVersion}"
+    id 'jacoco'
+    id 'java'
+}
+group = 'com.achilles'
+version = '0.0.1-POC-SNAPSHOT'
+sourceCompatibility = '11'
+
+apply plugin: 'kotlin'
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+apply plugin: 'jacoco'
+apply from: 'ktlint.gradle'
+
+jacoco.toolVersion = "0.8.7"
+
+ktlint.dependsOn ktlintFormat
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${springVersion}")
+    }
+
+    dependencies {
+        dependency "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
+        dependency "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
+
+        dependency 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+        dependency 'org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8'
+
+        dependency 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+
+        dependency 'io.springfox:springfox-swagger2:2.9.2'
+        dependency 'io.springfox:springfox-swagger-ui:2.9.2'
+
+        dependency("org.springframework.boot:spring-boot-starter-test:${springVersion}") {
+            exclude group: 'org.junit', name: 'junit'
+            exclude group: 'org.mockito', name: 'mockito-core'
+        }
+
+        dependency 'net.logstash.logback:logstash-logback-encoder:6.3'
+        dependency 'ch.qos.logback:logback-classic:1.2.3'
+
+        dependency 'org.spekframework.spek2:spek-dsl-jvm:2.0.15'
+        dependency 'org.spekframework.spek2:spek-runner-junit5:2.0.15'
+
+        dependency 'org.mockito:mockito-core:2.16.0'
+        dependency 'org.mockito:mockito-junit-jupiter:2.18.3'
+
+        dependency 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+        dependency 'org.codehaus.janino:commons-compiler:3.1.2'
+
+        dependency 'com.fasterxml.jackson.module:jackson-module-kotlin:2.10.2'
+        dependency 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.2'
+
+        dependency 'org.apache.commons:commons-pool2:2.11.1'
+        dependency 'org.signal:embedded-redis:0.8.0'
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib',
+            'org.jetbrains.kotlinx:kotlinx-coroutines-core',
+            'org.jetbrains.kotlinx:kotlinx-coroutines-core-common',
+            'org.jetbrains.kotlin:kotlin-reflect',
+            'org.springframework.boot:spring-boot-starter-web',
+            'com.fasterxml.jackson.module:jackson-module-kotlin',
+            'com.fasterxml.jackson.datatype:jackson-datatype-jsr310',
+            'net.logstash.logback:logstash-logback-encoder',
+            'ch.qos.logback:logback-classic',
+            'org.springframework.boot:spring-boot-starter-data-redis'
+
+    implementation 'org.apache.commons:commons-pool2'
+
+    // Tests
+    testImplementation 'org.junit.jupiter:junit-jupiter-api',
+            'org.signal:embedded-redis'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit', module: 'junit'
+        exclude group: 'org.mockito', module: 'mockito-core'
+    }
+    testImplementation 'org.spekframework.spek2:spek-dsl-jvm',
+            'org.spekframework.spek2:spek-runner-junit5'
+
+    testImplementation 'org.mockito:mockito-core:2.16.0',
+            'org.mockito:mockito-junit-jupiter'
+
+    // spek requires kotlin-reflect, can be omitted if already in the classpath
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    implementation 'io.springfox:springfox-swagger2',
+            'io.springfox:springfox-swagger-ui'
+
+    compileOnly 'org.springframework.boot:spring-boot-devtools'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}
+
+compileJava {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+compileKotlin {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+compileTestKotlin {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+test {
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: ${descriptor}")
+    }
+    useJUnitPlatform()
+
+    tasks.withType(Test) {
+        testLogging {
+            // set options for log level LIFECYCLE
+            events TestLogEvent.FAILED,
+                    TestLogEvent.PASSED,
+                    TestLogEvent.SKIPPED,
+                    TestLogEvent.STANDARD_OUT
+            exceptionFormat TestExceptionFormat.FULL
+            showExceptions true
+            showCauses true
+            showStackTraces true
+
+            // set options for log level DEBUG and INFO
+            debug {
+                events TestLogEvent.STARTED,
+                        TestLogEvent.FAILED,
+                        TestLogEvent.PASSED,
+                        TestLogEvent.SKIPPED,
+                        TestLogEvent.STANDARD_ERROR,
+                        TestLogEvent.STANDARD_OUT
+                exceptionFormat TestExceptionFormat.FULL
+            }
+            info.events = debug.events
+            info.exceptionFormat = debug.exceptionFormat
+
+            afterSuite { desc, result ->
+                if (!desc.parent) { // will match the outermost suite
+                    def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                    def startItem = '|  ', endItem = '  |'
+                    def repeatLength = startItem.length() + output.length() + endItem.length()
+                    println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+                }
+            }
+        }
+    }
+}

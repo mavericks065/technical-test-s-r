@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+spring:
+  redis:
+    url:
+    host: localhost
+    port: 6432
+    database: 0

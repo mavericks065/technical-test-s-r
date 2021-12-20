@@ -1,3 +1,5 @@
+starwars_voting/ktlint.asc
+starwars_voting/.gradle/
 /logic-exercise/.idea
 /logic-exercise/node_modules
-
+starwars_voting/build/

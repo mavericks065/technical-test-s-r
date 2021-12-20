@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  redis:
+    url: redis://localhost:6379
+    host: localhost
+    port: 6379
+    database: 0
+    lettuce:
+      pool:
+        max-active: 50
+        max-idle: 50
+        min-idle: 0
