@@ -4,11 +4,11 @@
 
 1. Run docker compose `docker-compose -f docker/docker-compose.yml -p starwars_voting up` to run redis
 2. Run the springboot application with the `dev` spring profile
-3. 
+3. Go to `http://localhost:8080/swagger-ui.html` to play with the API
 
 
 
-To insert the characters: 
+### To insert the characters: 
 ```
 hset characters:starwars:1 "id" 1 "name" "Luke Skywalker" "pic" "https://vignette.wikia.nocookie.net/starwars/images/2/20/LukeTLJ.jpg" "homeworld" "tatooine"
 hset characters:starwars:2 "id" 2 "name" "C-3PO" "pic" "https://vignette.wikia.nocookie.net/starwars/images/3/3f/C-3PO_TLJ_Card_Trader_Award_Card.png" "homeworld" "tatooine"
