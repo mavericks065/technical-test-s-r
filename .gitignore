@@ -3,3 +3,7 @@ starwars_voting/.gradle/
 /logic-exercise/.idea
 /logic-exercise/node_modules
 starwars_voting/build/
+starwars_voting_front/node_modules
+starwars_voting_front/build
+starwars_voting_front/.idea
+
